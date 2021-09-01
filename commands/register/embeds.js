@@ -20,4 +20,11 @@ const menu = (page = 0, player) =>
 		.addField('Alianza', ` \`\`\`${player[page].AllianceName}\`\`\` `)
 		.addField('Fama de Asesinato', ` \`\`\`${player[page].KillFame}\`\`\` `);
 
-module.exports = { searching, error, menu };
+const bienvenida = player =>
+	new MessageEmbed()
+		.setTitle('Bienvenido')
+		.setDescription(
+			`El proceso de registro se ha completado con éxito.\n\nSe ha registrado como ${player.Name}`
+		);
+
+module.exports = { searching, error, menu, bienvenida };

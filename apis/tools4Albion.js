@@ -26,7 +26,7 @@ const players = async nickname => {
 
 	const { players } = await search(nickname);
 
-	if (!players) {
+	if (!players[0]) {
 		peticion.error = 'No se encontraron Jugadores con ese apodo.';
 		return peticion;
 	} else {

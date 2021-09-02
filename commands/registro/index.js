@@ -3,22 +3,24 @@ const api = require(__dirname + '/../../apis/tools4Albion');
 
 const embeds = require('./embeds');
 const bottons = require('./botton');
+const config = require(__dirname + '/../../config');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('register')
+		.setName('registro')
 		.setDescription('Iniciar sesion en el servidor')
 		.addStringOption(option =>
 			option
-				.setName('input')
+				.setName('apodo')
 				.setDescription('Apodo de albion online.')
 				.setRequired(true)
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
+
 		await interaction.editReply({ embeds: [embeds.searching] });
 
-		const nickname = await interaction.options.getString('input');
+		const nickname = await interaction.options.getString('apodo');
 
 		const peticion = await api.players(nickname);
 
@@ -47,6 +49,7 @@ module.exports = {
 		collector.on('collect', async i => {
 			i.deferUpdate();
 			const { customId } = i;
+
 			if (i.user.id !== interaction.user.id)
 				return i.reply({
 					content: 'Estos botones no son para ti.',
@@ -58,6 +61,15 @@ module.exports = {
 					embeds: [embeds.bienvenida(peticion.pedido[page])],
 					components: [],
 				});
+
+				await interaction.member.setNickname(peticion.pedido[page].Name);
+
+				const rol = await interaction.guild.roles.cache.get(
+					config.roles.registrado
+				);
+
+				await interaction.member.roles.add(rol);
+
 				action = true;
 			}
 
